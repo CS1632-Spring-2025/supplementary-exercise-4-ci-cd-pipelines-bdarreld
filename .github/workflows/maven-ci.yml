@@ -45,13 +45,19 @@ jobs:
         name: Jacoco coverage results
         path: target/site/jacoco
 
+    - name: Cache build
+      uses: actions/cache@v3
+      with:
+        key: cached-build-${{github.sha}} # sha represents the hash of the current commit version that triggers the current CI run
+        path: . # local directory
+
   # Uploads dependency graph to GitHub to receive Dependabot alerts 
   update_dependence_graph:
-
+    needs: maven_test
     runs-on: ubuntu-latest
 
     permissions:
-      contents: write
+      contents: write # write denotes both read and write. by default, the contents is read-only.
 
     steps:
     - name: Checkout repository
