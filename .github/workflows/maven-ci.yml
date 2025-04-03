@@ -53,13 +53,19 @@ jobs:
 
   # Uploads dependency graph to GitHub to receive Dependabot alerts 
   update_dependence_graph:
-    needs: maven_test
+    needs: maven_test     # maven_test must complete first before update_dependence_graph runs
     runs-on: ubuntu-latest
 
     permissions:
       contents: write # write denotes both read and write. by default, the contents is read-only.
 
     steps:
+    - name: Restore cached build
+      uses: actions/cache@v3
+      with:
+        key: cached-build-${{github.sha}}
+        path: .
+    
     - name: Checkout repository
       uses: actions/checkout@v3
 
